@@ -1,3 +1,33 @@
 spring:
-    application:
-        name: spring-batch
+  application:
+    name: spring-batch
+  data:
+    rest:
+      base-path: /api
+    mongodb:
+      database: batchdb
+      uri: mongodb+srv://${dbuser}:${dbcreds}@myatlasclusteredu.d5j9t4u.mongodb.net/
+  batch:
+    jdbc:
+      initialize-schema: always
+      platform: postgresql
+      schema: classpath:/org/springframework/batch/core/schema-postgresql.sql
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://ep-bold-wildflower-a1m5nsm8.ap-southeast-1.aws.neon.tech:5432/batchdb?currentSchema=batchdb
+    username: ${pguser}
+    password: ${pgcreds}
+    hikari:
+      schema: batchdb
+
+logging:
+  level:
+    root: trace
+    .: trace
+    sun:
+      rmi: error

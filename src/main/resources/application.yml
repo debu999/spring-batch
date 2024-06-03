@@ -6,12 +6,11 @@ spring:
       base-path: /api
     mongodb:
       database: batchdb
-      uri: mongodb+srv://${dbuser}:${dbcreds}@myatlasclusteredu.d5j9t4u.mongodb.net/
+      uri: mongodb+srv://${dbuser}:${dbcreds}@${mongo_server}/
   batch:
     jdbc:
-      initialize-schema: always
       platform: postgresql
-      schema: classpath:/org/springframework/batch/core/schema-postgresql.sql
+      initialize-schema: never
   devtools:
     livereload:
       enabled: true
@@ -19,15 +18,25 @@ spring:
       enabled: true
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://ep-bold-wildflower-a1m5nsm8.ap-southeast-1.aws.neon.tech:5432/batchdb?currentSchema=batchdb
+    url: jdbc:postgresql://${pg_server}:5432/batchdb?currentSchema=batchdb
     username: ${pguser}
     password: ${pgcreds}
     hikari:
       schema: batchdb
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
 logging:
   level:
-    root: trace
-    .: trace
+    root: info
+    .: info
     sun:
       rmi: error
+    javax:
+      management: error
+    org:
+      springdoc:
+        jdbc:
+          core: trace

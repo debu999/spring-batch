@@ -1,8 +1,10 @@
 package org.doogle.springbatch.batches;
 
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParametersIncrementer;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.repeat.RepeatStatus;
@@ -22,8 +24,16 @@ public class JobConfiguration {
     }
 
     @Bean
-    public Job firstJob() {
-        return new JobBuilder("firstJob", jobRepository).start(firstStep()).build();
+    public Job firstJob(JobParametersIncrementer incrementer, Step firstStep) {
+        return new JobBuilder("firstJob", jobRepository)
+            .start(firstStep)
+            .incrementer(incrementer) // add this line
+            .build();
+    }
+
+    @Bean
+    public JobParametersIncrementer incrementer() {
+        return new RunIdIncrementer();
     }
 
     @Bean

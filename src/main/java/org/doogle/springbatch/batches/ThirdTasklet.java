@@ -13,7 +13,8 @@ public class ThirdTasklet implements Tasklet {
   @Override
   public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext)
       throws Exception {
-    System.out.println("This is the third tasklet step.");
+    System.out.println(
+        "This is the third tasklet step." + chunkContext.getStepContext().getJobExecutionContext());
     return RepeatStatus.FINISHED;
   }
 }

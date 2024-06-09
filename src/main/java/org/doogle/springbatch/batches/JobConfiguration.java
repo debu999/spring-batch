@@ -1,5 +1,7 @@
 package org.doogle.springbatch.batches;
 
+import org.doogle.springbatch.batches.listener.FirstJobListener;
+import org.doogle.springbatch.batches.listener.ThirdStepListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersIncrementer;
 import org.springframework.batch.core.Step;
@@ -19,12 +21,17 @@ public class JobConfiguration {
   PlatformTransactionManager transactionManager;
 
   ThirdTasklet thirdTasklet;
+  FirstJobListener firstJobListener;
+  ThirdStepListener thirdStepListener;
 
   public JobConfiguration(JobRepository jobRepository,
-      PlatformTransactionManager transactionManager, ThirdTasklet thirdTasklet) {
+      PlatformTransactionManager transactionManager, ThirdTasklet thirdTasklet,
+      FirstJobListener firstJobListener, ThirdStepListener thirdStepListener) {
     this.jobRepository = jobRepository;
     this.transactionManager = transactionManager;
     this.thirdTasklet = thirdTasklet;
+    this.firstJobListener = firstJobListener;
+    this.thirdStepListener = thirdStepListener;
   }
 
   @Bean
@@ -33,7 +40,7 @@ public class JobConfiguration {
         .incrementer(incrementer) // add this line
         .next(secondStep).next(
             new StepBuilder("thirdStep", jobRepository).tasklet(thirdTasklet, transactionManager)
-                .build()).build();
+                .listener(thirdStepListener).build()).listener(firstJobListener).build();
   }
 
   @Bean

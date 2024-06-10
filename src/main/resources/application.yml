@@ -11,6 +11,8 @@ spring:
     jdbc:
       platform: postgresql
       initialize-schema: never
+    job:
+      enabled: false
   devtools:
     livereload:
       enabled: true
@@ -40,3 +42,9 @@ logging:
       springdoc:
         jdbc:
           core: trace
+
+springdoc:
+  show-actuator: true
+  swagger-ui:
+    show-extensions: true
+    show-common-extensions: true

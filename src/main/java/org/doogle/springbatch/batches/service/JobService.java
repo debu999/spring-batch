@@ -1,6 +1,5 @@
 package org.doogle.springbatch.batches.service;
 
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,11 +21,14 @@ public class JobService {
   Job firstJob;
   Job fourthJob;
   JobLauncher jobLauncher;
-  public JobService( @Qualifier("firstJob") Job firstJob,
-      @Qualifier("fourthJob") Job fourthJob, JobLauncher jobLauncher) {
+  Job csvJob;
+
+  public JobService(@Qualifier("firstJob") Job firstJob, @Qualifier("fourthJob") Job fourthJob,
+      JobLauncher jobLauncher, @Qualifier("csvJob") Job csvJob) {
     this.firstJob = firstJob;
     this.fourthJob = fourthJob;
     this.jobLauncher = jobLauncher;
+    this.csvJob = csvJob;
     log.info("JobService bean created");
   }
 
@@ -35,7 +37,8 @@ public class JobService {
     Map<String, JobParameter<?>> jobParametersMap = new HashMap<>();
 //    jobParametersMap.put("time", new JobParameter<>(Instant.now().toString(), String.class));
     jobParamsRequestList.forEach(jobParamsRequest -> {
-      jobParametersMap.put(jobParamsRequest.getParamKey(), new JobParameter<>(jobParamsRequest.getParamValue(), String.class));
+      jobParametersMap.put(jobParamsRequest.getParamKey(),
+          new JobParameter<>(jobParamsRequest.getParamValue(), String.class));
     });
     JobParameters jobParameters = new JobParameters(jobParametersMap);
     try {
@@ -43,10 +46,12 @@ public class JobService {
       if (jobName.equals("firstJob")) {
         jobExecution = jobLauncher.run(firstJob, jobParameters);
       } else if (jobName.equals("fourthJob")) {
-        jobExecution = jobLauncher.run(fourthJob,jobParameters);
+        jobExecution = jobLauncher.run(fourthJob, jobParameters);
+      } else if (jobName.equals("csvJob")) {
+        jobExecution = jobLauncher.run(csvJob, jobParameters);
       }
       assert jobExecution != null;
-      log.info("Job Execution ID is {}",jobExecution.getId());
+      log.info("Job Execution ID is {}", jobExecution.getId());
     } catch (Exception e) {
       log.error("Error starting job: {}", e.getMessage());
     }

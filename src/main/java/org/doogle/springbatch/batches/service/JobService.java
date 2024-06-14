@@ -22,13 +22,17 @@ public class JobService {
   Job fourthJob;
   JobLauncher jobLauncher;
   Job csvJob;
+//  Job fileExporterJob;
 
   public JobService(@Qualifier("firstJob") Job firstJob, @Qualifier("fourthJob") Job fourthJob,
-      JobLauncher jobLauncher, @Qualifier("csvJob") Job csvJob) {
+      JobLauncher jobLauncher, @Qualifier("csvJob") Job csvJob//,
+//      @Qualifier("fileExporterJob") Job fileExporterJob
+  ) {
     this.firstJob = firstJob;
     this.fourthJob = fourthJob;
     this.jobLauncher = jobLauncher;
     this.csvJob = csvJob;
+//    this.fileExporterJob = fileExporterJob;
     log.info("JobService bean created");
   }
 
@@ -50,6 +54,9 @@ public class JobService {
       } else if (jobName.equals("csvJob")) {
         jobExecution = jobLauncher.run(csvJob, jobParameters);
       }
+//      else if (jobName.equals("fileExporterJob")) {
+//        jobExecution = jobLauncher.run(fileExporterJob, jobParameters);
+//      }
       assert jobExecution != null;
       log.info("Job Execution ID is {}", jobExecution.getId());
     } catch (Exception e) {

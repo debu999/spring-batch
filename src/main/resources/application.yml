@@ -12,7 +12,8 @@ spring:
       platform: postgresql
       initialize-schema: never
     job:
-      enabled: false
+      enabled: true
+      name: csvJob
   devtools:
     livereload:
       enabled: true

@@ -9,6 +9,7 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class FirstJobScheduler {
   JobLauncher jobLauncher;
   Job firstJob;
 
-  public FirstJobScheduler(JobLauncher jobLauncher, Job firstJob) {
+  public FirstJobScheduler(JobLauncher jobLauncher, @Qualifier("firstJob") Job firstJob) {
     this.jobLauncher = jobLauncher;
     this.firstJob = firstJob;
     System.out.println("First Job Scheduler Constructor");

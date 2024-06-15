@@ -8,13 +8,13 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersIncrementer;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
@@ -27,15 +27,13 @@ public class CsvJobConfiguration {
   JobRepository jobRepository;
   PlatformTransactionManager transactionManager;
   CsvChunkWriter csvChunkWriter;
-  JobParametersIncrementer incrementer;
 
-  public CsvJobConfiguration(JobRepository jobRepository,
-      CsvChunkWriter csvChunkWriter,
-      PlatformTransactionManager transactionManager, JobParametersIncrementer incrementer) {
+  public CsvJobConfiguration(JobRepository jobRepository, CsvChunkWriter csvChunkWriter,
+      PlatformTransactionManager transactionManager,
+      @Qualifier("incrementer") JobParametersIncrementer incrementer) {
     this.jobRepository = jobRepository;
     this.csvChunkWriter = csvChunkWriter;
     this.transactionManager = transactionManager;
-    this.incrementer = incrementer;
   }
 
   public FlatFileItemReader<EmployeeCsv> flatFileItemReader() {
@@ -66,9 +64,9 @@ public class CsvJobConfiguration {
   }
 
   @Bean
-  public Job csvJob() {
-    return new JobBuilder("csvJob", jobRepository).start(cfvChunkStep())
-        .incrementer(incrementer).build();
+  public Job csvJob(JobParametersIncrementer incrementer) {
+    return new JobBuilder("csvJob", jobRepository).incrementer(incrementer).start(cfvChunkStep())
+        .build();
   }
 //
 //  @Bean

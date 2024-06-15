@@ -31,3 +31,5 @@ inner join batch_job_execution_context bjec on bje.job_execution_id = bjec.job_e
 inner join batch_step_execution bse on bje.job_execution_id = bse.job_execution_id
 inner join batch_step_execution_context bsec on bse.step_execution_id = bsec.step_execution_id
 order by bji.job_instance_id desc, bje.job_execution_id desc, bse.step_execution_id desc, bjep.parameter_name desc, bjep.parameter_value desc;
+
+update batch_job_instance set job_name ='csvJob1' where job_name = 'csvJob'
